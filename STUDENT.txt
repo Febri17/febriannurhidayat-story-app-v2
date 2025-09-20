@@ -1,2 +1,2 @@
-APP_URL=<url_aplikasi>
+APP_URL=https://febri17.github.io/febriannurhidayat-story-app-v2/
 MAP_SERVICE_API_KEY=<api_key>
