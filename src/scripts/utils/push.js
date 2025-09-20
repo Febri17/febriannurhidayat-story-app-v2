@@ -2,13 +2,21 @@ import CONFIG from '../config';
 import { urlBase64ToUint8Array } from './index';
 import * as StoryAPI from '../data/api';
 
-const SERVICE_WORKER_URL = '/sw.js';
+const SERVICE_WORKER_FILENAME = 'sw.bundle.js';
+function resolveServiceWorkerUrl() {
+  return new URL(SERVICE_WORKER_FILENAME, location.href).toString();
+}
 
 export async function registerServiceWorker() {
   if (!('serviceWorker' in navigator)) {
     throw new Error('Service Worker tidak didukung browser ini.');
   }
-  const reg = await navigator.serviceWorker.register(SERVICE_WORKER_URL);
+  const existingRegs = await navigator.serviceWorker.getRegistrations();
+  const swUrl = resolveServiceWorkerUrl();
+  const existing = existingRegs.find((r) => r && r.active && r.scriptURL === swUrl);
+  if (existing) return existing;
+
+  const reg = await navigator.serviceWorker.register(swUrl);
   return reg;
 }
 
