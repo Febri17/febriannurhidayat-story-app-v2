@@ -153,7 +153,7 @@ async function registerServiceWorker() {
   try {
     const regs = await navigator.serviceWorker.getRegistrations();
     const found = regs.find(
-      (r) => r && r.active && r.scriptURL && r.scriptURL.includes('/sw.bundle.js'),
+      (r) => r && r.active && r.scriptURL && r.scriptURL.includes('sw.bundle.js'),
     );
     if (found) {
       console.log('Service worker already registered (existing):', found);
@@ -161,7 +161,8 @@ async function registerServiceWorker() {
       return found;
     }
 
-    const reg = await navigator.serviceWorker.register('/sw.bundle.js', { scope: '/' });
+    const swUrl = new URL('sw.bundle.js', location.href).toString();
+    const reg = await navigator.serviceWorker.register(swUrl);
     console.log('Service Worker registered:', reg);
     swRegistered = true;
 
