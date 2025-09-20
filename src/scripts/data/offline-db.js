@@ -89,3 +89,5 @@ export async function getAllCachedStories() {
     req.onerror = () => reject(req.error);
   });
 }
+
+export { addOutboxItem as addToOutbox };

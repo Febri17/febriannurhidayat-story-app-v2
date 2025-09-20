@@ -8,30 +8,31 @@ export function generateLoaderAbsoluteTemplate() {
 
 export function generateMainNavigationListTemplate() {
   return `
-    <li role="none"><a role="menuitem" href="#/">Beranda</a></li>
-    <li role="none"><a role="menuitem" href="#/new">Buat Story</a></li>
-    <li role="none"><a role="menuitem" href="#/bookmark">Tersimpan</a></li>
+    <li><a href="#/">Beranda</a></li>
+    <li><a href="#/new">Buat Story</a></li>
+    <li><a href="#/bookmark">Tersimpan</a></li>
   `;
 }
 
 export function generateAuthenticatedNavigationListTemplate() {
   return `
-    <li role="none"><button id="logout-button" class="btn">Keluar</button></li>
+    <li><button id="logout-button" class="logout-button">Logout</button></li>
   `;
 }
 
 export function generateUnauthenticatedNavigationListTemplate() {
   return `
-    <li role="none"><a role="menuitem" href="#/login">Masuk</a></li>
-    <li role="none"><a role="menuitem" href="#/register">Daftar</a></li>
+    <li><a href="#/login">Login</a></li>
+    <li><a href="#/register">Register</a></li>
   `;
 }
 
 export function generateSubscribeButtonTemplate() {
-  return `<button id="subscribe-button" class="btn btn-outline" type="button">Berlangganan Notifikasi</button>`;
+  return `<button id="subscribe-button" class="btn btn-outline">Berlangganan Notif</button>`;
 }
+
 export function generateUnsubscribeButtonTemplate() {
-  return `<button id="unsubscribe-button" class="btn btn-outline" type="button">Berhenti Berlangganan</button>`;
+  return `<button id="unsubscribe-button" class="btn btn-outline">Berhenti Berlangganan</button>`;
 }
 
 export function generateStoryItemTemplate({
@@ -63,65 +64,27 @@ export function generateStoryItemTemplate({
   `;
 }
 
-export function generateReportItemTemplate({
-  id,
-  title,
-  description,
-  evidenceImages,
-  createdAt,
-  location,
-  reporterName,
-}) {
-  const imageUrl =
-    evidenceImages && evidenceImages.length > 0
-      ? evidenceImages[0]
-      : 'images/placeholder-image.png';
+export function generateBookmarkItemTemplate({ id, name, description, photoUrl, createdAt }) {
   const shortDesc = description
     ? description.length > 150
       ? description.slice(0, 147) + '...'
       : description
     : '';
-  const placeName =
-    location?.placeName ||
-    (typeof location?.latitude !== 'undefined' && typeof location?.longitude !== 'undefined'
-      ? `${location.latitude}, ${location.longitude}`
-      : '');
   return `
-    <article tabindex="0" class="report-item" data-id="${id}">
-      <a class="report-item__link" href="#/reports/${id}">
-        <img class="report-item__image" src="${imageUrl}" alt="${title || 'Gambar laporan'}">
-        <div class="report-item__body">
-          <div class="report-item__main">
-            <h2 class="report-item__title">${title || '-'}</h2>
-            <div class="report-item__more-info">
-              <div class="report-item__createdat">Dibuat: ${new Date(createdAt).toLocaleString()}</div>
-              <div class="report-item__location">Lokasi: ${placeName || '-'}</div>
-              <div class="report-item__author">Pelapor: ${reporterName || 'Anonim'}</div>
-            </div>
-            <p class="report-item__description">${shortDesc}</p>
-            <a class="report-item__read-more btn" href="#/reports/${id}">Lihat Detail</a>
-          </div>
-        </div>
+    <article class="story-item story-item--bookmark" data-id="${id}">
+      <a href="#/stories/${id}" class="story-link">
+        <img class="story-item__image" src="${photoUrl}" alt="Foto story oleh ${name}">
       </a>
+      <div class="story-item__body">
+        <h2 class="story-item__title">${name}</h2>
+        <div class="story-item__meta">${new Date(createdAt).toLocaleString()}</div>
+        <p class="story-item__desc">${shortDesc}</p>
+        <div style="display:flex; gap:8px; margin-top:12px;">
+          <a class="btn" href="#/stories/${id}">Lihat</a>
+          <button class="btn btn-outline btn-bookmark-delete" data-bookmark-id="${id}" type="button">Hapus</button>
+        </div>
+      </div>
     </article>
-  `;
-}
-
-export function generateReportsListEmptyTemplate() {
-  return `
-    <div class="reports-list__empty">
-      <h2>Tidak ada laporan tersimpan</h2>
-      <p>Belum ada laporan yang Anda simpan.</p>
-    </div>
-  `;
-}
-
-export function generateReportsListErrorTemplate(message = '') {
-  return `
-    <div class="reports-list__error">
-      <h2>Gagal memuat daftar laporan</h2>
-      <p>${message || 'Terjadi kesalahan.'}</p>
-    </div>
   `;
 }
 
@@ -130,6 +93,15 @@ export function generateStoriesListEmpty() {
     <div class="stories-empty">
       <h2>Tidak ada story</h2>
       <p>Belum ada story yang dapat ditampilkan.</p>
+    </div>
+  `;
+}
+
+export function generateBookmarksListEmpty() {
+  return `
+    <div class="stories-empty">
+      <h2>Tidak ada story tersimpan</h2>
+      <p>Gunakan tombol Simpan di halaman detail story untuk menyimpan story</p>
     </div>
   `;
 }
@@ -143,16 +115,13 @@ export function generateStoryDetailTemplate({ name, description, photoUrl, creat
         <div class="story-detail__time">${new Date(createdAt).toLocaleString()}</div>
       </div>
       <div class="story-detail__body container">
+        <div style="display:flex; justify-content:flex-end; gap:8px; margin-bottom:12px;">
+          <button id="bookmark-button" class="btn btn-outline" type="button">Simpan</button>
+        </div>
         <h2>Deskripsi</h2>
         <p>${description}</p>
-        ${
-          lat && lon
-            ? `<h3>Lokasi</h3><div id="map" class="story-detail__map" style="height:300px"></div>`
-            : ''
-        }
+        ${lat && lon ? `<h3>Lokasi</h3><div id="map" class="story-detail__map" style="height:300px"></div>` : ''}
       </div>
     </section>
   `;
 }
-
-export { generateLoader as generateLoaderTemplate };

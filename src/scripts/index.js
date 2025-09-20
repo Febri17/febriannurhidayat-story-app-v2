@@ -1,4 +1,3 @@
-// src/scripts/index.js
 // Styles
 import '../styles/styles.css';
 import 'leaflet/dist/leaflet.css';
@@ -51,6 +50,7 @@ function renderNav() {
 
   items.push(`<li role="none"><a role="menuitem" href="#/">Beranda</a></li>`);
   items.push(`<li role="none"><a role="menuitem" href="#/about">About</a></li>`);
+  items.push(`<li role="none"><a role="menuitem" href="#/bookmark">Bookmark</a></li>`);
 
   if (isLogin) {
     items.push(`<li role="none"><a role="menuitem" href="#/new">Buat Story</a></li>`);
