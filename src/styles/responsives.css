@@ -1,0 +1,20 @@
+@media screen and (min-width: 600px) {
+  form .form-buttons {
+    flex-direction: row;
+  }
+  .navigation-drawer {
+    position: static;
+    transform: none;
+    opacity: 1;
+    background: transparent;
+    padding: 0;
+  }
+  .drawer-button {
+    display: none;
+  }
+}
+@media screen and (min-width: 1000px) {
+  .stories-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
